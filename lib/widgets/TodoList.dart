@@ -22,31 +22,33 @@ class TodoListState extends State<TodoList> {
     return DataTable(
       columns: <DataColumn>[
         DataColumn(
-          // label: Text(''),
-          label: IconButton(
-            icon: Icon(Icons.delete),
-            onPressed: () {
-              Config submitConfig = Config(
-                callback: () {
-                  context.read<Todos>().clear();
-                  Navigator.pop(context);
-                },
-                text: 'Yes',
-              );
+          label: Visibility(
+            visible: data.any((element) => element.isSelected),
+            child: IconButton(
+              icon: Icon(Icons.delete),
+              onPressed: () {
+                Config submitConfig = Config(
+                  callback: () {
+                    context.read<Todos>().removeSelected();
+                    Navigator.pop(context);
+                  },
+                  text: 'Yes',
+                );
 
-              Config cancelConfig = Config(
-                callback: () => Navigator.pop(context),
-                text: 'No',
-              );
+                Config cancelConfig = Config(
+                  callback: () => Navigator.pop(context),
+                  text: 'No',
+                );
 
-              showCustomDialog(
-                context,
-                'Are you sure?',
-                'Do you really want to delete all these TODOs? This action cannot be canceled',
-                submitConfig,
-                cancelConfig,
-              );
-            },
+                showCustomDialog(
+                  context,
+                  'Are you sure?',
+                  'Do you really want to delete all these TODOs? This action cannot be canceled',
+                  submitConfig,
+                  cancelConfig,
+                );
+              },
+            ),
           ),
         ),
       ],

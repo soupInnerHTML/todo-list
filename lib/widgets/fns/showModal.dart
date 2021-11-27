@@ -6,9 +6,10 @@ showModal(context, action, callback, [initialValue]) =>
       context: context,
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
+        final bottom = MediaQuery.of(context).viewInsets.bottom;
         return Container(
           height: 200,
-          margin: EdgeInsets.only(bottom: 0),
+          margin: EdgeInsets.only(bottom: bottom),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20), topRight: Radius.circular(20)),

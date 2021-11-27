@@ -79,6 +79,13 @@ class Todos with ChangeNotifier {
     _persist();
   }
 
+  void removeSelected() {
+    _tempData = [..._data];
+    _data.removeWhere((element) => element.isSelected);
+    notifyListeners();
+    _persist();
+  }
+
   void clear() {
     _data = [];
     _tempData = [];

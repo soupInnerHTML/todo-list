@@ -37,13 +37,13 @@ class _CustomFormState extends State<CustomForm> {
               child: TextFormField(
                 // The validator receives the text that the user has entered.
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
+                  if (value == null || value.trim().isEmpty) {
                     return 'Please enter some text';
                   }
                   return null;
                 },
                 onSaved: (String? value) {
-                  listItemText = value;
+                  listItemText = value!.trim();
                 },
                 initialValue: widget.initialValue,
                 maxLength: 30,

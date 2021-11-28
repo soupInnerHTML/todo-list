@@ -6,6 +6,7 @@ import 'package:flutter_application_1/widgets/fns/showModal.dart';
 import 'package:provider/provider.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:vibration/vibration.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class TodoList extends StatefulWidget {
   @override
@@ -20,35 +21,52 @@ class TodoListState extends State<TodoList> {
     final data = context.watch<Todos>().getData();
 
     return DataTable(
+      headingRowHeight: 70,
+      dataRowHeight: 70,
+      horizontalMargin: 0,
+      checkboxHorizontalMargin: 25,
+      showBottomBorder: data.length > 0,
+      dataTextStyle: TextStyle(fontSize: 16, color: Colors.black),
       columns: <DataColumn>[
         DataColumn(
-          label: Visibility(
-            visible: data.any((element) => element.isSelected),
-            child: IconButton(
-              icon: Icon(Icons.delete),
-              onPressed: () {
-                Config submitConfig = Config(
-                  callback: () {
-                    context.read<Todos>().removeSelected();
-                    Navigator.pop(context);
+          label: Row(
+            children: [
+              Text.rich(TextSpan(
+                  text: '${data.where((element) => element.isSelected).length}/${data.length}'),
+                  style: TextStyle(
+                    color: Colors.grey
+                  ),
+              ),
+              Visibility(
+                visible: data.any((element) => element.isSelected),
+                child: IconButton(
+                  color: Colors.red,
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    Config submitConfig = Config(
+                      callback: () {
+                        context.read<Todos>().removeSelected();
+                        Navigator.pop(context);
+                      },
+                      text: 'Yes',
+                    );
+
+                    Config cancelConfig = Config(
+                      callback: () => Navigator.pop(context),
+                      text: 'No',
+                    );
+
+                    showCustomDialog(
+                      context,
+                      'Are you sure?',
+                      'Do you really want to delete all these TODOs? This action cannot be canceled',
+                      submitConfig,
+                      cancelConfig,
+                    );
                   },
-                  text: 'Yes',
-                );
-
-                Config cancelConfig = Config(
-                  callback: () => Navigator.pop(context),
-                  text: 'No',
-                );
-
-                showCustomDialog(
-                  context,
-                  'Are you sure?',
-                  'Do you really want to delete all these TODOs? This action cannot be canceled',
-                  submitConfig,
-                  cancelConfig,
-                );
-              },
-            ),
+                ),
+              ),
+            ],
           ),
         ),
       ],
@@ -65,66 +83,68 @@ class TodoListState extends State<TodoList> {
             },
           ),
           cells: <DataCell>[
-            DataCell(
-              GestureDetector(
-                onLongPress: () async {
-                  if (await Vibration.hasVibrator()) {
-                    Vibration.vibrate(duration: 25);
-                  }
+            DataCell(GestureDetector(
+              onLongPress: () async {
+                if (await Vibration.hasVibrator()) {
+                  Vibration.vibrate(duration: 25);
+                }
 
-                  Config submitConfig = Config(
-                    callback: () {
-                      context.read<Todos>().removeItem(item);
-                      Navigator.pop(context);
-                    },
-                    text: 'Yes',
-                  );
+                Config submitConfig = Config(
+                  callback: () {
+                    context.read<Todos>().removeItem(item);
+                    Navigator.pop(context);
+                  },
+                  text: 'Yes',
+                );
 
-                  Config cancelConfig = Config(
-                    callback: () => Navigator.pop(context),
-                    text: 'No',
-                  );
+                Config cancelConfig = Config(
+                  callback: () => Navigator.pop(context),
+                  text: 'No',
+                );
 
-                  showCustomDialog(
-                    context,
-                    'Are you sure?',
-                    'Do you really want to delete this TODO? This action cannot be canceled',
-                    submitConfig,
-                    cancelConfig,
-                  );
-                },
-                child: Container(
-                  color: Colors.transparent,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(item.text),
-                      Row(children: [
-                        IconButton(
-                          icon: Icon(Icons.remove_circle_outline),
-                          onPressed: () {
-                            context.read<Todos>().removeItem(item);
-                            showCustomSnack(context);
-                          },
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.edit),
-                          onPressed: () {
-                            showModal(
-                                context,
-                                'Edit',
-                                (listItemText) => context
-                                    .read<Todos>()
-                                    .editItem(item, listItemText),
-                                item.text);
-                          },
-                        )
-                      ])
-                    ],
-                  ),
+                showCustomDialog(
+                  context,
+                  'Are you sure?',
+                  'Do you really want to delete this TODO? This action cannot be canceled',
+                  submitConfig,
+                  cancelConfig,
+                );
+              },
+              child: Slidable(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Center(child: Text(item.text)),
+                  ],
+                ),
+                endActionPane: ActionPane(
+                  children: [
+                    SlidableAction(
+                      onPressed: (BuildContext context) {
+                        context.read<Todos>().removeItem(item);
+                        showCustomSnack(context, context.read<Todos>().resetData, 'TODO was deleted');
+                      },
+                      backgroundColor: Color(0xFFFE4A49),
+                      icon: Icons.delete,
+                    ),
+                    SlidableAction(
+                      onPressed: (BuildContext context) {
+                        showModal(
+                            context,
+                            'Edit',
+                            (String listItemText) => context
+                                .read<Todos>()
+                                .editItem(item, listItemText),
+                            item.text);
+                      },
+                      backgroundColor: Colors.blue,
+                      icon: Icons.edit,
+                    ),
+                  ],
+                  motion: BehindMotion(),
                 ),
               ),
-            )
+            ))
           ],
           selected: item.isSelected,
           onSelectChanged: (bool? value) {

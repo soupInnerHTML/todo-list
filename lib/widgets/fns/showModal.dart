@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/widgets/CustomForm.dart';
 
-showModal(context, action, callback, [initialValue]) =>
+showModal(BuildContext context, String action, Function callback, [initialValue]) =>
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.transparent,

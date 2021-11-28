@@ -14,7 +14,8 @@ class TodoApp extends StatelessWidget {
       child: MaterialApp(
           title: 'TODO App',
           theme: ThemeData(primarySwatch: Colors.deepPurple),
-          home: MainPage()),
+          home: MainPage()
+      ),
     );
   }
 }

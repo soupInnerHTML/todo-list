@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Config {
@@ -7,11 +9,32 @@ class Config {
   Config({required this.callback, required this.text});
 }
 
+final dialogCallbackPerPlatform = Platform.isIOS ? showCupertinoDialog : showDialog;
+
 showCustomDialog(BuildContext context, String title, String content,
     Config submitConfig, Config cancelConfig) {
-  showDialog<String>(
+  dialogCallbackPerPlatform<String>(
     context: context,
-    builder: (BuildContext context) => AlertDialog(
+    builder: (BuildContext context) => Platform.isIOS ? CupertinoAlertDialog(
+      title: Text(title),
+      content: Text(content),
+      actions: <Widget>[
+        TextButton(
+          onPressed: cancelConfig.callback,
+          child: Text(
+            cancelConfig.text,
+            style: TextStyle(color: Colors.blue),
+          ),
+        ),
+        TextButton(
+          onPressed: submitConfig.callback,
+          child: Text(
+            submitConfig.text,
+            style: TextStyle(color: Colors.red),
+          ),
+        ),
+      ],
+    ) : AlertDialog(
       title: Text(title),
       content: Text(content),
       actions: <Widget>[

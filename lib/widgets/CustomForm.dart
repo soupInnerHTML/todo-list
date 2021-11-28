@@ -63,7 +63,13 @@ class _CustomFormState extends State<CustomForm> {
                         // you'd often call a server or save the information in a database.
                         _formKey.currentState!.save();
                         widget.callback(listItemText);
-                        Navigator.pop(context);
+
+                        if(widget.action == 'Edit') {
+                          Navigator.pop(context);
+                        }
+                        else {
+                          _formKey.currentState!.reset();
+                        }
                       }
                     },
                     child: Text(widget.action),

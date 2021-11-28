@@ -14,11 +14,12 @@ class MainPage extends StatelessWidget {
         brightness: Brightness.dark, //white icons in status bar
       ),
       body: Container(
-        child: SingleChildScrollView(child: Column(children: <Widget>[
+        child: SingleChildScrollView(
+            child: Column(children: <Widget>[
           Visibility(
             child: EmptyData(),
             visible: context.watch<Todos>().getData().isEmpty,
-            ),
+          ),
           TodoList(),
         ])),
       ),
@@ -28,7 +29,13 @@ class MainPage extends StatelessWidget {
           showModal(context, 'Add', context.read<Todos>().addItem);
         },
       ),
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        child: Container(height: 50.0),
+        color: Colors.deepPurple,
+      ),
       resizeToAvoidBottomInset: false,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }

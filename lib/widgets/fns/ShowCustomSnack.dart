@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/models/todos.dart';
-import 'package:provider/provider.dart';
 
-showCustomSnack(BuildContext context) {
+showCustomSnack(
+    BuildContext context,
+    void Function() onPressed,
+    String content,
+    {String label = 'UNDO'}) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      content: const Text('TODO was deleted'),
+      content: Text(content),
       action: SnackBarAction(
-        label: 'UNDO',
+        label: label,
         textColor: Colors.blue,
-        onPressed: () {
-          context.read<Todos>().resetData();
-        },
+        onPressed: onPressed,
       ),
     ),
   );

@@ -1,6 +1,6 @@
 // @dart=2.9
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/models/todos.dart';
+import 'package:flutter_application_1/models/Todos.dart';
 import 'package:flutter_application_1/widgets/MainPage.dart';
 import 'package:provider/provider.dart';
 

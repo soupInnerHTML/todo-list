@@ -7,6 +7,7 @@ showCustomSnack(
     {String label = 'UNDO'}) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
+      behavior: SnackBarBehavior.floating,
       content: Text(content),
       action: SnackBarAction(
         label: label,

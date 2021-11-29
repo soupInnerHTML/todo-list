@@ -6,9 +6,6 @@ class CustomListItem {
   String text;
   bool isSelected;
   CustomListItem(this.text, this.isSelected);
-  // CustomListItem.fromJson(Map<String, dynamic> json)
-  //     : text = json['text'],
-  //       isSelected = json['isSelected'];
 
   Map<String, dynamic> toJson() {
     return {
@@ -18,29 +15,26 @@ class CustomListItem {
   }
 }
 
-class Todos with ChangeNotifier {
-  List<CustomListItem> _data = [];
-  List<CustomListItem> _tempData = [];
-  List<CustomListItem> getData() => _data;
+typedef TodosList = List<CustomListItem>;
 
-  // @override
-  // void addListener(VoidCallback listener) {
-  //   notifyListeners();
-  //   print('__listener__');
-  // }
+class Todos with ChangeNotifier {
+  TodosList _data = [];
+  TodosList _tempData = [];
+  TodosList getData() => _data;
 
   Todos() {
     _processPersistence();
   }
 
   void _persist() async {
-    final prefs = await SharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('todos', jsonEncode(_data));
   }
 
   void _processPersistence() async {
-    final prefs = await SharedPreferences.getInstance();
-    final todos = prefs.getString('todos');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? todos = prefs.getString('todos');
+
     if (todos != null) {
       _setData(jsonDecode(todos));
     }
@@ -58,6 +52,10 @@ class Todos with ChangeNotifier {
     _tempData = [];
     notifyListeners();
     _persist();
+  }
+
+  int getSelectedLength() {
+    return this._data.where((element) => element.isSelected).length;
   }
 
   void addItem(String listItemText) {

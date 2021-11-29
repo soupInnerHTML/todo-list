@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/models/todos.dart';
+import 'package:flutter_application_1/models/Todos.dart';
 import 'package:flutter_application_1/widgets/EmptyData.dart';
-import 'package:flutter_application_1/widgets/TodoList.dart';
+import 'package:flutter_application_1/widgets/TodoList/TodoList.dart';
 import 'package:flutter_application_1/widgets/fns/showModal.dart';
 import 'package:provider/provider.dart';
 
@@ -15,12 +15,12 @@ class MainPage extends StatelessWidget {
       ),
       body: Container(
         child: SingleChildScrollView(
-            child: Column(children: <Widget>[
-          Visibility(
-            child: EmptyData(),
-            visible: context.watch<Todos>().getData().isEmpty,
-          ),
-          TodoList(),
+          child: Column(children: <Widget>[
+            Visibility(
+              child: EmptyData(),
+              visible: context.watch<Todos>().getData().isEmpty,
+            ),
+            TodoList(),
         ])),
       ),
       floatingActionButton: FloatingActionButton(

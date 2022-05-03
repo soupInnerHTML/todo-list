@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomListItem {
   String text;
+
   bool isSelected;
-  CustomListItem(this.text, this.isSelected);
+  CustomListItem(this.text, {this.isSelected = false});
 
   Map<String, dynamic> toJson() {
     return {
@@ -19,11 +21,23 @@ typedef TodosList = List<CustomListItem>;
 
 class Todos with ChangeNotifier {
   TodosList _data = [];
+
+  TodosList get data => _data;
+  set data(TodosList newVal) {
+    _tempData = [...data];
+    _data = newVal;
+    notifyListeners();
+    _persist();
+  }
+
   TodosList _tempData = [];
-  TodosList getData() => _data;
+  TodosList getData() => data;
 
   Todos() {
     _processPersistence();
+  }
+  void operator +(String listItemText) {
+    addItem(listItemText);
   }
 
   void _persist() async {
@@ -41,59 +55,58 @@ class Todos with ChangeNotifier {
   }
 
   void _setData(List<dynamic> newData) {
-    _data = [
-      ...newData.map((el) => CustomListItem(el["text"], el["isSelected"]))
-    ];
+    _data = newData
+        .map((el) => CustomListItem(el["text"], isSelected: el["isSelected"]))
+        .toList();
     notifyListeners();
   }
 
   void resetData() {
-    _data = _tempData;
+    data = _tempData;
     _tempData = [];
-    notifyListeners();
-    _persist();
   }
 
-  int getSelectedLength() {
+  get selectedLength {
     return this._data.where((element) => element.isSelected).length;
   }
 
   void addItem(String listItemText) {
-    _data.add(CustomListItem(listItemText, false));
-    notifyListeners();
-    _persist();
+    data = [...data, CustomListItem(listItemText)];
   }
 
-  void editItem(CustomListItem listItem, String listItemText) {
-    listItem.text = listItemText;
-    notifyListeners();
-    _persist();
+  Function(String) editItem(CustomListItem listItem) {
+    return (String listItemText) {
+      data = data
+          .map((element) => CustomListItem(
+              listItem.hashCode == element.hashCode
+                  ? listItemText
+                  : element.text,
+              isSelected: element.isSelected))
+          .toList();
+    };
   }
 
   void removeItem(CustomListItem listItem) {
-    _tempData = [..._data];
-    _data.remove(listItem);
-    notifyListeners();
-    _persist();
+    data =
+        data.where((element) => element.hashCode != listItem.hashCode).toList();
   }
 
   void removeSelected() {
-    _tempData = [..._data];
-    _data.removeWhere((element) => element.isSelected);
-    notifyListeners();
-    _persist();
+    data = data.where((element) => !element.isSelected).toList();
   }
 
-  void clear() {
-    _data = [];
-    _tempData = [];
-    notifyListeners();
-    _persist();
+  void changeIsSelected(CustomListItem listItem, bool isSelected) {
+    data = data
+        .map((element) => CustomListItem(element.text,
+            isSelected: element.hashCode == listItem.hashCode
+                ? isSelected
+                : element.isSelected))
+        .toList();
   }
 
-  void changeIsSelected(CustomListItem listItem, bool _isSelected) {
-    listItem.isSelected = _isSelected;
-    notifyListeners();
-    _persist();
+  void selectAll(bool isSelected) {
+    data = data
+        .map((element) => CustomListItem(element.text, isSelected: isSelected))
+        .toList();
   }
 }

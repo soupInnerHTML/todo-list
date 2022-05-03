@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/widgets/CustomForm.dart';
 
-showModal(BuildContext context, String action, Function callback, [initialValue]) =>
+showModal(BuildContext context, String action, Function callback,
+        [initialValue]) =>
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.transparent,
@@ -13,7 +14,7 @@ showModal(BuildContext context, String action, Function callback, [initialValue]
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-            color: Colors.white,
+            color: Theme.of(context).cardColor,
           ),
           child: Center(
             child: Column(

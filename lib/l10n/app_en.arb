@@ -1,0 +1,22 @@
+{
+  "appTitle": "TODO List",
+  "settings": "Settings",
+  "darkTheme": "Dark theme",
+  "removeTodo": "Remove TODO on complete",
+  "accentColor": "App accent color",
+  "enterSomeText": "Please enter some text",
+  "cancel": "Cancel",
+  "systemLanguage": "System language",
+  "undo": "undo",
+  "deletedTodo": "TODO was deleted",
+  "areYouSure": "Are you sure?",
+  "yes": "Yes",
+  "no": "No",
+  "deleteTodos": "Do you really want to delete all these TODOs? This action cannot be canceled",
+  "deleteTodo": "Do you really want to delete this TODO? This action cannot be canceled",
+  "language": "Language",
+  "addButtonPosition": "Add button position",
+  "center": "Center",
+  "left": "Left",
+  "right": "Right"
+}

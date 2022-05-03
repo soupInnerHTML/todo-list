@@ -1,28 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/models/Todos.dart';
+import 'package:flutter_application_1/widgets/TodoList/TodoListCellSlidable.dart';
 import 'package:flutter_application_1/widgets/TodoList/TodoListColumn.dart';
+import 'package:flutter_application_1/widgets/TodoList/TodoListLongPressHandler.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_1/widgets/TodoList/TodoListCell.dart';
 
-class TodoList extends StatefulWidget {
-  @override
-  TodoListState createState() {
-    return TodoListState();
-  }
-}
-
-class TodoListState extends State<TodoList> {
+class TodoList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    TodosList data = context.watch<Todos>().getData();
+    Todos todos = context.read<Todos>();
+    TodosList data = todos.getData();
 
     return DataTable(
       headingRowHeight: 70,
       dataRowHeight: 70,
       horizontalMargin: 0,
       checkboxHorizontalMargin: 25,
-      showBottomBorder: data.length > 0,
-      dataTextStyle: TextStyle(fontSize: 16, color: Colors.black),
+      onSelectAll: (value) {
+        todos.selectAll(value!);
+      },
+      // dataTextStyle: TextStyle(fontSize: 16, color: Colors.black),
       columns: <DataColumn>[
         DataColumn(
           label: TodoListColumn(),
@@ -41,11 +39,13 @@ class TodoListState extends State<TodoList> {
             },
           ),
           cells: <DataCell>[
-            DataCell(TodoListCell(item))
+            DataCell(TodoListLongPressHandler(
+                TodoListCellSlideable(widget: TodoListCell(item), item: item),
+                item))
           ],
           selected: item.isSelected,
-          onSelectChanged: (bool? value) {
-            context.read<Todos>().changeIsSelected(item, value!);
+          onSelectChanged: (value) {
+            todos.changeIsSelected(item, value!);
           },
         );
       }),

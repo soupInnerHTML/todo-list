@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CustomForm extends StatefulWidget {
   final String action;
@@ -26,6 +27,7 @@ class _CustomFormState extends State<CustomForm> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!; //translation
     // Build a Form widget using the _formKey created above.
     return Form(
       key: _formKey,
@@ -38,15 +40,16 @@ class _CustomFormState extends State<CustomForm> {
                 // The validator receives the text that the user has entered.
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Please enter some text';
+                    return t.enterSomeText;
                   }
                   return null;
                 },
                 onSaved: (String? value) {
                   listItemText = value!.trim();
                 },
+                autofocus: true,
                 initialValue: widget.initialValue,
-                maxLength: 30,
+                maxLength: 100,
               ),
             ),
             Padding(
@@ -64,10 +67,9 @@ class _CustomFormState extends State<CustomForm> {
                         _formKey.currentState!.save();
                         widget.callback(listItemText);
 
-                        if(widget.action == 'Edit') {
+                        if (widget.action == 'Edit') {
                           Navigator.pop(context);
-                        }
-                        else {
+                        } else {
                           _formKey.currentState!.reset();
                         }
                       }
@@ -77,7 +79,7 @@ class _CustomFormState extends State<CustomForm> {
                 ),
                 ElevatedButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text('Cancel'),
+                  child: Text(t.cancel),
                 ),
               ]),
             )

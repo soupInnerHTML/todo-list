@@ -24,7 +24,7 @@ class TodoListColumn extends StatelessWidget {
             onPressed: () {
               Config submitConfig = Config(
                 callback: () {
-                  context.read<Todos>().removeSelected();
+                  context.read<Todos>().removeCompleted();
                   Navigator.pop(context);
                 },
                 text: l.yes,

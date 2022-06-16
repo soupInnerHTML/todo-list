@@ -6,13 +6,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 class CustomListItem {
   String text;
 
-  bool isSelected;
-  CustomListItem(this.text, {this.isSelected = false});
+  bool isDone;
+  bool willDie;
+  CustomListItem(this.text, {this.isDone = false, this.willDie = false});
 
   Map<String, dynamic> toJson() {
     return {
       'text': text,
-      'isSelected': isSelected,
+      'isDone': isDone,
     };
   }
 }
@@ -56,7 +57,7 @@ class Todos with ChangeNotifier {
 
   void _setData(List<dynamic> newData) {
     _data = newData
-        .map((el) => CustomListItem(el["text"], isSelected: el["isSelected"]))
+        .map((el) => CustomListItem(el["text"], isDone: el["isDone"]))
         .toList();
     notifyListeners();
   }
@@ -67,7 +68,7 @@ class Todos with ChangeNotifier {
   }
 
   get selectedLength {
-    return this._data.where((element) => element.isSelected).length;
+    return this._data.where((element) => element.isDone).length;
   }
 
   void addItem(String listItemText) {
@@ -81,7 +82,7 @@ class Todos with ChangeNotifier {
               listItem.hashCode == element.hashCode
                   ? listItemText
                   : element.text,
-              isSelected: element.isSelected))
+              isDone: element.isDone))
           .toList();
     };
   }
@@ -91,22 +92,22 @@ class Todos with ChangeNotifier {
         data.where((element) => element.hashCode != listItem.hashCode).toList();
   }
 
-  void removeSelected() {
-    data = data.where((element) => !element.isSelected).toList();
+  void removeCompleted() {
+    data = data.where((element) => !element.isDone).toList();
   }
 
-  void changeIsSelected(CustomListItem listItem, bool isSelected) {
+  void changeIsDone(CustomListItem listItem, bool isDone) {
     data = data
         .map((element) => CustomListItem(element.text,
-            isSelected: element.hashCode == listItem.hashCode
-                ? isSelected
-                : element.isSelected))
+            isDone: element.hashCode == listItem.hashCode
+                ? isDone
+                : element.isDone))
         .toList();
   }
 
   void selectAll(bool isSelected) {
     data = data
-        .map((element) => CustomListItem(element.text, isSelected: isSelected))
+        .map((element) => CustomListItem(element.text, isDone: isSelected))
         .toList();
   }
 }

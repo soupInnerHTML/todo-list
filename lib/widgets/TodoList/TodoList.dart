@@ -26,29 +26,35 @@ class TodoList extends StatelessWidget {
           label: TodoListColumn(),
         ),
       ],
-      rows: List<DataRow>.generate(data.length, (int index) {
-        var item = data[index];
-        return DataRow(
-          color: MaterialStateProperty.resolveWith<Color?>(
-            (Set<MaterialState> states) {
-              // All rows will have the same selected color.
-              if (states.contains(MaterialState.selected)) {
-                return Theme.of(context).colorScheme.primary.withOpacity(0.08);
-              }
-              return null; // Use default value for other states and odd rows.
+      rows: List<DataRow>.generate(
+        data.length,
+        (int index) {
+          var item = data[index];
+          return DataRow(
+            color: MaterialStateProperty.resolveWith<Color?>(
+              (Set<MaterialState> states) {
+                // All rows will have the same selected color.
+                if (states.contains(MaterialState.selected)) {
+                  return Theme.of(context)
+                      .colorScheme
+                      .primary
+                      .withOpacity(0.08);
+                }
+                return null; // Use default value for other states and odd rows.
+              },
+            ),
+            cells: <DataCell>[
+              DataCell(TodoListLongPressHandler(
+                  TodoListCellSlideable(widget: TodoListCell(item), item: item),
+                  item))
+            ],
+            selected: item.isDone,
+            onSelectChanged: (value) {
+              todos.changeIsDone(item, value!);
             },
-          ),
-          cells: <DataCell>[
-            DataCell(TodoListLongPressHandler(
-                TodoListCellSlideable(widget: TodoListCell(item), item: item),
-                item))
-          ],
-          selected: item.isSelected,
-          onSelectChanged: (value) {
-            todos.changeIsSelected(item, value!);
-          },
-        );
-      }),
+          );
+        },
+      ),
     );
   }
 }

@@ -95,7 +95,7 @@ class Settings with ChangeNotifier {
       this.theme = EnumToString.fromString(
           Brightness.values, theme.replaceAll(RegExp(r'\w+\.'), ""))!;
     } else {
-      this.theme = SchedulerBinding.instance!.window.platformBrightness;
+      this.theme = SchedulerBinding.instance.window.platformBrightness;
     }
 
     if (primarySwatch != null) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/utils/preventFlashesOnThemeSwitch.dart';
 import 'package:flutter_application_1/widgets/MainPage.dart';
 import 'package:flutter_application_1/widgets/Settings/Settings.dart';
 import 'package:flutter_application_1/models/Settings.dart' as SettingsModel;
@@ -36,10 +37,15 @@ class App extends StatelessWidget {
         '/settings': (context) => Settings()
       },
       theme: ThemeData(
-          brightness: settings.theme,
-          primarySwatch: settings.primarySwatch,
-          appBarTheme:
-              AppBarTheme(iconTheme: IconThemeData(color: Colors.white))),
+        brightness: settings.theme,
+        primarySwatch: settings.primarySwatch,
+        appBarTheme: AppBarTheme(
+            // iconTheme: IconThemeData(
+            // color: preventFlashesOnThemeSwitch(context, Colors.white,
+            // base: Brightness.light),
+            // )
+            ),
+      ),
     );
   }
 }
